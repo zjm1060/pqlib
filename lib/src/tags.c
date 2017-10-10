@@ -187,8 +187,8 @@ tag *createTagCollection(GUID guid,int num_of_child_is_alloc)
 {
 	tag *t = tagAlloc();
 
-	t->guid = guid;
-	t->element_type = ID_ELEMENT_TYPE_COLLECTION;
+	t->element.tagElement = guid;
+	t->element.typeElement = ID_ELEMENT_TYPE_COLLECTION;
 
 #if !STATIC_COLLECTION_NUM
 	t->num_of_child_is_alloc = num_of_child_is_alloc;
@@ -204,8 +204,8 @@ tag *createTagCollection(GUID guid,int num_of_child_is_alloc)
 
 void vectorFree(tag *p)
 {
-	if(p->data_len > 8){
-		pq_free(p->uint1);
+	if(p->element.isEmbedded == 0){
+		pq_free(p->data);
 	}
 
 	pq_free(p);
@@ -215,10 +215,10 @@ tag *createTagVector(GUID guid,int phy,void *vector,size_t vector_len)
 {
 	tag *t = tagAlloc();
 
-	t->guid = guid;
-	t->element_type = ID_ELEMENT_TYPE_VECTOR;
-	t->phy_type = phy;
-	t->data_len = vector_len;
+	t->element.tagElement = guid;
+	t->element.typeElement = ID_ELEMENT_TYPE_VECTOR;
+	t->element.typePhysical = phy;
+	t->element.link.sizeElement = vector_len;
 
 #if DEBUG
 	t->name = getNameByGuid(guid);
@@ -230,10 +230,11 @@ tag *createTagVector(GUID guid,int phy,void *vector,size_t vector_len)
 		case ID_PHYS_TYPE_INTEGER1:
 		case ID_PHYS_TYPE_UNS_INTEGER1:{
 				if(vector_len <= 8){
-					memcpy(t->data,vector,vector_len);
+					memcpy(t->element.valueEmbedded,vector,vector_len);
+					t->element.isEmbedded = 1;
 				}else{
-					t->uint1 = pq_alloc(vector_len);
-					memcpy(t->uint1,vector,vector_len);
+					t->data = pq_alloc(vector_len);
+					memcpy(t->data,vector,vector_len);
 				}
 			}break;
 
@@ -241,35 +242,38 @@ tag *createTagVector(GUID guid,int phy,void *vector,size_t vector_len)
 		case ID_PHYS_TYPE_CHAR2:
 		case ID_PHYS_TYPE_INTEGER2:
 		case ID_PHYS_TYPE_UNS_INTEGER2:{
-				t->data_len *= 2;
+				t->element.link.sizeElement *= 2;
 				if(vector_len <= 4){
-					memcpy(t->data,vector,vector_len*2);
+					memcpy(t->element.valueEmbedded,vector,vector_len*2);
+					t->element.isEmbedded = 1;
 				}else{
-					t->uint2 = calloc(1,vector_len*2);
-					memcpy(t->uint2,vector,vector_len*2);
+					t->data = calloc(1,vector_len*2);
+					memcpy(t->data,vector,vector_len*2);
 				}
 			}break;
 		case ID_PHYS_TYPE_BOOLEAN4:
 		case ID_PHYS_TYPE_INTEGER4:
 		case ID_PHYS_TYPE_UNS_INTEGER4:
 		case ID_PHYS_TYPE_REAL4:{
-				t->data_len *= 4;
+				t->element.link.sizeElement *= 4;
 				if(vector_len <= 2){
-					memcpy(t->data,vector,vector_len*4);
+					memcpy(t->element.valueEmbedded,vector,vector_len*4);
+					t->element.isEmbedded = 1;
 				}else{
-					t->uint4 = calloc(1,vector_len*4);
-					memcpy(t->uint4,vector,vector_len*4);
+					t->data = calloc(1,vector_len*4);
+					memcpy(t->data,vector,vector_len*4);
 				}
 			}break;
 
 		case ID_PHYS_TYPE_REAL8:
 		case ID_PHYS_TYPE_COMPLEX8:{
-				t->data_len *= 8;
+				t->element.link.sizeElement *= 8;
 				if(vector_len == 1){
-					memcpy(t->data,vector,8);
+					memcpy(t->element.valueEmbedded,vector,8);
+					t->element.isEmbedded = 1;
 				}else{
-					t->real8 = calloc(1,vector_len*8);
-					memcpy(t->real8,vector,vector_len*8);
+					t->data = calloc(1,vector_len*8);
+					memcpy(t->data,vector,vector_len*8);
 				}
 			}break;
 
@@ -279,8 +283,8 @@ tag *createTagVector(GUID guid,int phy,void *vector,size_t vector_len)
 //			break;
 		case ID_PHYS_TYPE_COMPLEX16:
 //		case ID_PHYS_TYPE_GUID:
-			t->id = pq_alloc(sizeof(GUID));
-			memcpy(t->id,vector,sizeof(GUID));
+			t->data = pq_alloc(sizeof(GUID));
+			memcpy(t->data,vector,sizeof(GUID));
 			break;
 	}
 
@@ -289,10 +293,10 @@ tag *createTagVector(GUID guid,int phy,void *vector,size_t vector_len)
 
 void scalarFree(tag *p)
 {
-	if(p->phy_type == ID_PHYS_TYPE_TIMESTAMPPQDIF ||
-			p->phy_type == ID_PHYS_TYPE_COMPLEX16 ||
-			p->phy_type == ID_PHYS_TYPE_GUID){
-		pq_free(p->id);
+	if(p->element.typePhysical == ID_PHYS_TYPE_TIMESTAMPPQDIF ||
+			p->element.typePhysical == ID_PHYS_TYPE_COMPLEX16 ||
+			p->element.typePhysical == ID_PHYS_TYPE_GUID){
+		pq_free(p->data);
 	}
 
 	pq_free(p);
@@ -303,9 +307,9 @@ tag *createTagScalar(GUID guid,int phy,void *vector)
 {
 	tag *t = tagAlloc();
 
-	t->guid = guid;
-	t->element_type = ID_ELEMENT_TYPE_SCALAR;
-	t->phy_type = phy;
+	t->element.tagElement = guid;
+	t->element.typeElement = ID_ELEMENT_TYPE_SCALAR;
+	t->element.typePhysical = phy;
 
 #if DEBUG
 	t->name = getNameByGuid(guid);
@@ -316,35 +320,39 @@ tag *createTagScalar(GUID guid,int phy,void *vector)
 		case ID_PHYS_TYPE_CHAR1:
 		case ID_PHYS_TYPE_INTEGER1:
 		case ID_PHYS_TYPE_UNS_INTEGER1:{
-				t->data[0] = *((uint8_t *)vector);
+				t->element.valueEmbedded[0] = *((UINT1 *)vector);
+				t->element.isEmbedded = 1;
 			}break;
 
 		case ID_PHYS_TYPE_BOOLEAN2:
 		case ID_PHYS_TYPE_CHAR2:
 		case ID_PHYS_TYPE_INTEGER2:
 		case ID_PHYS_TYPE_UNS_INTEGER2:{
-				t->data[0] = *((uint16_t *)vector);
+				t->element.valueEmbedded[0] = *((UINT2 *)vector);
+				t->element.isEmbedded = 1;
 			}break;
 		case ID_PHYS_TYPE_BOOLEAN4:
 		case ID_PHYS_TYPE_INTEGER4:
 		case ID_PHYS_TYPE_UNS_INTEGER4:
 		case ID_PHYS_TYPE_REAL4:{
-				t->data[0] = *((uint32_t *)vector);
+				t->element.valueEmbedded[0] = *((UINT4 *)vector);
+				t->element.isEmbedded = 1;
 			}break;
 
 		case ID_PHYS_TYPE_REAL8:
 		case ID_PHYS_TYPE_COMPLEX8:{
-				memcpy(t->data,vector,8);
+				memcpy(t->element.valueEmbedded,vector,8);
+				t->element.isEmbedded = 1;
 			}break;
 
 		case ID_PHYS_TYPE_TIMESTAMPPQDIF:
-			t->time = pq_alloc(sizeof(TIMESTAMPPQDIF));
-			memcpy(t->time,vector,sizeof(TIMESTAMPPQDIF));
+			t->data = pq_alloc(sizeof(TIMESTAMPPQDIF));
+			memcpy(t->data,vector,sizeof(TIMESTAMPPQDIF));
 			break;
 		case ID_PHYS_TYPE_COMPLEX16:
 		case ID_PHYS_TYPE_GUID:
-			t->id = pq_alloc(sizeof(GUID));
-			memcpy(t->id,vector,sizeof(GUID));
+			t->data = pq_alloc(sizeof(GUID));
+			memcpy(t->data,vector,sizeof(GUID));
 			break;
 	}
 
@@ -394,7 +402,7 @@ tag *findTagInCollection(tag *collection,GUID guid)
 	tag *child;
 	for (int i = 0; i < collection->num_of_collection; ++i) {
 		child = collection->child[i];
-		if(PQDIF_IsEqualGUID(child->guid,guid))
+		if(PQDIF_IsEqualGUID(child->element.tagElement,guid))
 			return child;
 	}
 
@@ -406,9 +414,9 @@ void collectionFree(tag *coll)
 	tag *child;
 	for (int i = 0; i < coll->num_of_collection; ++i) {
 		child = coll->child[i];
-		if(child->element_type == ID_ELEMENT_TYPE_COLLECTION){
+		if(child->element.typeElement == ID_ELEMENT_TYPE_COLLECTION){
 			collectionFree(child);
-		}else if(child->element_type == ID_ELEMENT_TYPE_VECTOR){
+		}else if(child->element.typeElement == ID_ELEMENT_TYPE_VECTOR){
 			vectorFree(child);
 		}else{
 			scalarFree(child);

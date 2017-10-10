@@ -1,35 +1,17 @@
+#ifndef __NAME_ID_H
+#define __NAME_ID_H
+
 #include "tags.h"
 
 #define declareID(id) extern const GUID id
 
 
-//  Description:   No compression is used.
-//  Version:       1.0
 #define ID_COMP_STYLE_NONE 0
-
-//  Description:   The body of each record is compressed individually. The checksums will be found in the header of each record.
-//  Version:       1.0
 #define ID_COMP_STYLE_RECORDLEVEL 2
-
-//  Description:   Everything after the container record is compressed as a single block. This feature has been deprecated under 1.5 and should not be used.
-//  Version:       1.5 Deprecated
 #define ID_COMP_STYLE_TOTALFILE 1
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagCompressionAlgorithmID
-//  ==========================================================
-
-//  Description:   No compression algorithm is used.
-//  Version:       1.0
 #define ID_COMP_ALG_NONE 0
-
-//  Description:   A standard compression algorithm -- ZLIB -- standardized by the IETF (Internet Engineering Task Force). See http://quest.jpl.nasa.gov/zlib/ for details.
-//  Version:       1.0
 #define ID_COMP_ALG_ZLIB 1
-
-//  Description:   A commercial package, the PKZIP data compression library, was used to compress the data. This feature has been deprecated under 1.5 and should not be used.
-//  Version:       1.5 Deprecated
 #define ID_COMP_ALG_PKZIPCL 64
 
 declareID( ID_DS_TYPE_MEASURE );
@@ -247,148 +229,41 @@ declareID( ID_INSTR_TYPE_PQM );
 declareID( ID_INSTR_TYPE_VR );
 declareID( ID_INSTR_TYPE_SA );
 
-//  Description:   Phase is not applicable.
-//  Version:       1.0
 #define ID_PHASE_NONE 0
-
-//  Description:   A-to-neutral.
-//  Version:       1.0
 #define ID_PHASE_AN   1
-
-//  Description:   B-to-neutral.
-//  Version:       1.0
 #define ID_PHASE_BN   2
-
-//  Description:   C-to-neutral.
-//  Version:       1.0
 #define ID_PHASE_CN   3
-
-//  Description:   Neutral-to-ground.
-//  Version:       1.0
 #define ID_PHASE_NG   4
-
-//  Description:   A-to-B.
-//  Version:       1.0
 #define ID_PHASE_AB   5
-
-//  Description:   B-to-C.
-//  Version:       1.0
 #define ID_PHASE_BC   6
-
-//  Description:   C-to-A.
-//  Version:       1.0
 #define ID_PHASE_CA   7
-
-//  Description:   Residual - the vector or point-on-wave sum of Phases A, B, and C.  Should be zero in a perfectly balanced system.
-//  Version:       1.0
 #define ID_PHASE_RES  8
-
-//  Description:   Net - the vector or point-on-wave sum of Phases A, B, C and the Neutral phase.  Should be zero in a 4 wire system with no earth return path.
-//  Version:       1.0
 #define ID_PHASE_NET  9
-
-//  Description:   The value representing a total or other summarizing value in a multi-phase system.
-//  Version:       1.5
 #define ID_PHASE_TOTAL 13
-
-//  Description:   The value representing average of 3 line-neutral values
-//  Version:       1.5
 #define ID_PHASE_LN_AVE 14
-
-//  Description:   The value representing average of 3 line-line values
-//  Version:       1.5
 #define ID_PHASE_LL_AVE 15
-
-//  Description:   The value representing the "worst" of the 3 phases
-//  Version:       1.5
 #define ID_PHASE_WORST 16
-
-//  Description:   DC Positive
-//  Version:       1.5
 #define ID_PHASE_PLUS 17
-
-//  Description:   DC Negative
-//  Version:       1.5
 #define ID_PHASE_MINUS 18
-
-//  Description:   Generic Phase 1
-//  Version:       1.5
 #define ID_PHASE_GENERAL_1 19
-
-//  Description:   Generic Phase 2
-//  Version:       1.5
 #define ID_PHASE_GENERAL_2 20
-
-//  Description:   Generic Phase 3
-//  Version:       1.5
 #define ID_PHASE_GENERAL_3 21
-
-//  Description:   Generic Phase 4
-//  Version:       1.5
 #define ID_PHASE_GENERAL_4 22
-
-//  Description:   Generic Phase 5
-//  Version:       1.5
 #define ID_PHASE_GENERAL_5 23
-
-//  Description:   Generic Phase 6
-//  Version:       1.5
 #define ID_PHASE_GENERAL_6 24
-
-//  Description:   Generic Phase 7
-//  Version:       1.5
 #define ID_PHASE_GENERAL_7 25
-
-//  Description:   Generic Phase 8
-//  Version:       1.5
 #define ID_PHASE_GENERAL_8 26
-
-//  Description:   Generic Phase 9
-//  Version:       1.5
 #define ID_PHASE_GENERAL_9 27
-
-//  Description:   Generic Phase 10
-//  Version:       1.5
 #define ID_PHASE_GENERAL_10 28
-
-//  Description:   Generic Phase 11
-//  Version:       1.5
 #define ID_PHASE_GENERAL_11 29
-
-//  Description:   Generic Phase 12
-//  Version:       1.5
 #define ID_PHASE_GENERAL_12 30
-
-//  Description:   Generic Phase 13
-//  Version:       1.5
 #define ID_PHASE_GENERAL_13 31
-
-//  Description:   Generic Phase 14
-//  Version:       1.5
 #define ID_PHASE_GENERAL_14 32
-
-//  Description:   Generic Phase 15
-//  Version:       1.5
 #define ID_PHASE_GENERAL_15 33
-
-//  Description:   Generic Phase 16
-//  Version:       1.5
 #define ID_PHASE_GENERAL_16 34
-
-//  Description:   The value representing maximum of 3 line-neutral values
-//  Version:       1.6
 #define ID_PHASE_LN_MAX 36
-
-//  Description:   The value representing minimum of 3 line-neutral values
-//  Version:       1.6
 #define ID_PHASE_LN_MIN 37
-
-//  Description:   The value representing maximum of 3 line-line values
-//  Version:       1.6
 #define ID_PHASE_LL_MAX 38
-
-//  Description:   The value representing minimum of 3 line-line values
-//  Version:       1.6
 #define ID_PHASE_LL_MIN 39
 
 declareID( ID_QT_WAVEFORM );
@@ -440,172 +315,47 @@ declareID( ID_DISTURB_1159_WAVEDISTORT_INTERHARMONIC );
 declareID( ID_DISTURB_1159_WAVEDISTORT_NOTCHING );
 declareID( ID_DISTURB_1159_WAVEDISTORT_NOISE );
 
-//  Description:   Unitless.
-//  Version:       1.0
 #define ID_QU_NONE        0
-
-//  Description:   Seconds -- relative from the beginning time of the observation (using tagTimeStart as the beginning time).
-//  Version:       1.0
 #define ID_QU_SECONDS     2
-
-//  Description:   Absolute time. Each timestamp in the series must be in absolute time using the TIMESTAMPPQDIF physical type. This is generally *not* recommended, but is acceptible when _VALUELOG is used.
-//  Version:       1.0
 #define ID_QU_TIMESTAMP   1
-
-//  Description:   The timestamps are in cycles, relative to tagTimeStart.
-//  Version:       1.0
 #define ID_QU_CYCLES      3
-
-//  Description:   Volts.
-//  Version:       1.0
 #define ID_QU_VOLTS       6
-
-//  Description:   Amperes.
-//  Version:       1.0
 #define ID_QU_AMPS        7
-
-//  Description:   Volt-amperes.
-//  Version:       1.0
 #define ID_QU_VA          8
-
-//  Description:   Watts.
-//  Version:       1.0
 #define ID_QU_WATTS       9
-
-//  Description:   Volt-amperes reactive.
-//  Version:       1.0
 #define ID_QU_VARS        10
-
-//  Description:   Ohms.
-//  Version:       1.0
 #define ID_QU_OHMS        11
-
-//  Description:   Siemens.
-//  Version:       1.0
 #define ID_QU_SIEMENS     12
-
-//  Description:   Volts per amp.
-//  Version:       1.0
 #define ID_QU_VOLTSPERAMP 13
-
-//  Description:   Joules.
-//  Version:       1.0
 #define ID_QU_JOULES      14
-
-//  Description:   Hertz.
-//  Version:       1.0
 #define ID_QU_HERTZ       15
-
-//  Description:   Celcius.
-//  Version:       1.0
 #define ID_QU_CELCIUS     16
-
-//  Description:   Degrees of arc.
-//  Version:       1.0
 #define ID_QU_DEGREES     17
-
-//  Description:   Decibels.
-//  Version:       1.0
 #define ID_QU_DB          18
-
-//  Description:   Percent.
-//  Version:       1.0
 #define ID_QU_PERCENT     19
-
-//  Description:   Per-unit.
-//  Version:       1.0
 #define ID_QU_PERUNIT     20
-
-//  Description:   Number of counts or samples
-//  Version:       1.0
 #define ID_QU_SAMPLES     21
-
-//  Description:   Energy - var-hours
-//  Version:       1.5
 #define ID_QU_VARHOURS 22
-
-//  Description:   Energy - Watt-hours
-//  Version:       1.5
 #define ID_QU_WATTHOURS 23
-
-//  Description:   Energy - VA-hours
-//  Version:       1.5
 #define ID_QU_VAHOURS 24
-
-//  Description:   Meters/Second
-//  Version:       1.5
 #define ID_QU_MPS 25
-
-//  Description:   Miles/Hr
-//  Version:       1.5
 #define ID_QU_MPH 26
-
-//  Description:   Pressure, Bars
-//  Version:       1.5
 #define ID_QU_BARS 27
-
-//  Description:   Pressure, Pascals
-//  Version:       1.5
 #define ID_QU_PASCALS 28
-
-//  Description:   Force, Newtons
-//  Version:       1.5
 #define ID_QU_NEWTONS 29
-
-//  Description:   Torque, Newton Meters
-//  Version:       1.5
 #define ID_QU_NEWTONMETERS 30
-
-//  Description:   Revolutions/minute
-//  Version:       1.5
 #define ID_QU_RPM 31
-
-//  Description:   Radians/Second
-//  Version:       1.5
 #define ID_QU_RADPERSEC 32
-
-//  Description:   Meters
-//  Version:       1.5
 #define ID_QU_METERS 33
-
-//  Description:   Flux Linkage - Weber Turns
-//  Version:       1.5
 #define ID_QU_WEBERTURNS 34
-
-//  Description:   Flux Density - Teslas
-//  Version:       1.5
 #define ID_QU_TESLAS 35
-
-//  Description:   Magnetic Field - Webers
-//  Version:       1.5
 #define ID_QU_WEBERS 36
-
-//  Description:   Volts/Volts transfer function
-//  Version:       1.5
 #define ID_QU_VOLTSPERVOLT 37
-
-//  Description:   Amps/Amps transfer function
-//  Version:       1.5
 #define ID_QU_AMPSPERAMP 38
-
-//  Description:   Impedance Transfer Funtion
-//  Version:       1.5
 #define ID_QU_AMPSPERVOLT 39
-
-//  Description:   Acceleration in Meters/Second
-//  Version:       1.6
 #define ID_QU_MPS2 40
-
-//  Description:   Jerk in Meters/Second
-//  Version:       1.6
 #define ID_QU_MPS3 41
-
-//  Description:   Radians/Second
-//  Version:       1.6
 #define ID_QU_RADPERSEC2 42
-
-//  Description:   Radians/Second
-//  Version:       1.6
 #define ID_QU_RADPERSEC3 43
 
 declareID( ID_SERIES_VALUE_TYPE_RMS );
@@ -645,147 +395,47 @@ declareID( ID_SERIES_VALUE_TYPE_P95 );
 declareID( ID_SERIES_VALUE_TYPE_P99 );
 declareID( ID_SERIES_VALUE_TYPE_FREQUENCY );
 
-//  Description:   The data in tagSeriesValues are a straight array of data points.
-//  Version:       1.0
 #define ID_SERIES_METHOD_VALUES    0x01
-
-//  Description:   All values in tagSeriesValues will be multiplied by tagSeriesScale.
-//  Version:       1.0
 #define ID_SERIES_METHOD_SCALED 0x02
-
-//  Description:   The data in tagSeriesValues consists of a special sequence to indicate the contents of a regular rate series (see main documentation for details). The vector contains: #rates, numpts1, rate1 ... numptsN, rateN.
-//  Version:       1.0
 #define ID_SERIES_METHOD_INCREMENT 0x04
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagHintGreekPrefixID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_GREEK_DONTCARE 0
-
-//  Version:       1.0
 #define ID_GREEK_FEMTO    1
-
-//  Version:       1.0
 #define ID_GREEK_PICO     2
-
-//  Version:       1.0
 #define ID_GREEK_NANO     3
-
-//  Version:       1.0
 #define ID_GREEK_MICRO    4
-
-//  Version:       1.0
 #define ID_GREEK_MILLI    5
-
-//  Version:       1.0
 #define ID_GREEK_NONE     6
-
-//  Version:       1.0
 #define ID_GREEK_KILO     7
-
-//  Version:       1.0
 #define ID_GREEK_MEGA     8
-
-//  Version:       1.0
 #define ID_GREEK_TERA 10
-
-//  Version:       1.0
 #define ID_GREEK_GIGA     9
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagHintPreferredUnitsID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_PREFER_ENG 1
-
-//  Version:       1.0
 #define ID_PREFER_PCT 2
-
-//  Version:       1.0
 #define ID_PREFER_PU  3
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagHintDefaultDisplayID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_DEFAULT_DONTCARE 0
-
-//  Version:       1.0
 #define ID_DEFAULT_MAG      1
-
-//  Version:       1.0
 #define ID_DEFAULT_ANG      2
-
-//  Version:       1.0
 #define ID_DEFAULT_REAL     3
-
-//  Version:       1.0
 #define ID_DEFAULT_IMAG 4
-
-//  Version:       1.0
 #define ID_DEFAULT_RX 5
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagTriggerTypeID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_TRIG_NONE  0x00
-
-//  Version:       1.0
 #define ID_TRIG_LOW   0x01
-
-//  Version:       1.0
 #define ID_TRIG_HIGH  0x02
-
-//  Version:       1.0
 #define ID_TRIG_RATE  0x04
-
-//  Version:       1.0
 #define ID_TRIG_SHAPE 0x08
-
-//  Version:       1.0
 #define ID_TRIG_OTHER 0x10
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagXDTransformerTypeID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_XFORMER_TYPE_CT 2
-
-//  Version:       1.0
 #define ID_XFORMER_TYPE_PT 1
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagTriggerMethodID
-//  ==========================================================
-
-//  Version:       1.0
 #define ID_TRIGGER_METH_NONE 0
-
-//  Description:   A specific channel (or channels) caused the trigger; should be used with tagChannelTriggerIdx to specify which channels.
-//  Version:       1.0
 #define ID_TRIGGER_METH_CHANNEL 1
-
-//  Version:       1.0
 #define ID_TRIGGER_METH_PERIODIC 2
-
-//  Version:       1.0
 #define ID_TRIGGER_METH_EXTERNAL 3
-
-//  Description:   Periodic Statistical Data
-//  Version:       1.5
 #define ID_TRIGGER_METH_PERIODIC_STATS 4
 
 declareID( ID_QC_NONE );
@@ -922,233 +572,106 @@ declareID( ID_QC_ROTATIONAL );
 declareID( ID_QC_TEMPERATURE );
 declareID( ID_QC_REL_HUMIDITY );
 
-//  Description:   Humidity, or the amount of water vapor in the air
-//  Version:       1.0
 #define ID_QM_HUMIDITY 18
 
-//  Description:   None or not applicable.
-//  Version:       1.5
 #define ID_QM_NONE 0
-
-//  Description:   Voltage.
-//  Version:       1.5
 #define ID_QM_VOLTAGE 1
-
-//  Description:   Current.
-//  Version:       1.5
 #define ID_QM_CURRENT 2
-
-//  Description:   Power - includes all data for a quantity or characteristic derived from multiplying voltage and current components.
-//  Version:       1.5
 #define ID_QM_POWER 3
-
-//  Description:   Energy - includes all data from an integration of a quantity or characteristic derived from multiplying voltage and current components together.
-//  Version:       1.5
 #define ID_QM_ENERGY 4
-
-//  Description:   Temperature.
-//  Version:       1.5
 #define ID_QM_TEMPERATURE 5
-
-//  Description:   Pressure.
-//  Version:       1.5
 #define ID_QM_PRESSURE 6
-
-//  Description:   Charge.
-//  Version:       1.5
 #define ID_QM_CHARGE 7
-
-//  Description:   Electrical field.
-//  Version:       1.5
 #define ID_QM_EFIELD 8
-
-//  Description:   Magnetic field.
-//  Version:       1.5
 #define ID_QM_MFIELD 9
-
-//  Description:   Velocity
-//  Version:       1.5
 #define ID_QM_VELOCITY 10
-
-//  Description:   Compass Bearing
-//  Version:       1.5
 #define ID_QM_BEARING 11
-
-//  Description:   Applied Force, Electrical, Mechanical, etc.
-//  Version:       1.5
 #define ID_QM_FORCE 12
-
-//  Description:   Torque
-//  Version:       1.5
 #define ID_QM_TORQUE 13
-
-//  Description:   Spacial Position
-//  Version:       1.5
 #define ID_QM_POSITION 14
-
-//  Description:   Flux linkage Weber Turns
-//  Version:       1.5
 #define ID_QM_FLUXLINKAGE 15
-
-//  Description:   Magnetic field Density
-//  Version:       1.5
 #define ID_QM_FLUXDENSITY 16
-
-//  Description:   Status Data
-//  Version:       1.5
 #define ID_QM_STATUS 17
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagChanTriggerTypeID
-//  ==========================================================
-
-//  Description:   No transition - should not happen
-//  Version:       1.5
 #define ID_CTT_NONE 0
-
-//  Description:   Normal to low transition
-//  Version:       1.5
 #define ID_CTT_NORMAL_TO_LO 1
-
-//  Description:   Normal to low low transition
-//  Version:       1.5
 #define ID_CTT_NORMAL_TO_LO_LO 2
-
-//  Description:   Normal to High transition
-//  Version:       1.5
 #define ID_CTT_NORMAL_TO_HI 3
-
-//  Description:   Normal to High High transition
-//  Version:       1.5
 #define ID_CTT_NORMAL_TO_HI_HI 4
-
-//  Description:   Low Low to Lo transition
-//  Version:       1.5
 #define ID_CTT_LO_LO_TO_LO 5
-
-//  Description:   Low Low to Normal transition
-//  Version:       1.5
 #define ID_CTT_LO_LO_TO_NORMAL 6
-
-//  Description:   Low Low to High transition
-//  Version:       1.5
 #define ID_CTT_LO_LO_TO_HI 7
-
-//  Description:   Low Low to High High transition
-//  Version:       1.5
 #define ID_CTT_LO_LO_TO_HI_HI 8
-
-//  Description:   Low to Low Low transition
-//  Version:       1.5
 #define ID_CTT_LO_TO_LO_LO 9
-
-//  Description:   Low to Normal transition
-//  Version:       1.5
 #define ID_CTT_LO_TO_NORMAL 10
-
-//  Description:   Low to High transition
-//  Version:       1.5
 #define ID_CTT_LO_TO_HI 11
-
-//  Description:   Low to High High transition
-//  Version:       1.5
 #define ID_CTT_LO_TO_HI_HI 12
-
-//  Description:   High to Low Low transition
-//  Version:       1.5
 #define ID_CTT_HI_TO_LO_LO 13
-
-//  Description:   High to Low transition
-//  Version:       1.5
 #define ID_CTT_HI_TO_LO 14
-
-//  Description:   High to Normal transition
-//  Version:       1.5
 #define ID_CTT_HI_TO_NORMAL 15
-
-//  Description:   High to High High transition
-//  Version:       1.5
 #define ID_CTT_HI_TO_HI_HI 16
-
-//  Description:   High High to Low Low transition
-//  Version:       1.5
 #define ID_CTT_HI_HI_TO_LO_LO 17
-
-//  Description:   High High to Low transition
-//  Version:       1.5
 #define ID_CTT_HI_HI_TO_LO 18
-
-//  Description:   High High to Normal transition
-//  Version:       1.5
 #define ID_CTT_HI_HI_TO_NORMAL 19
-
-//  Description:   High High to High transition
-//  Version:       1.5
 #define ID_CTT_HI_HI_TO_HI 20
-
-//  Description:   Deadband transition lower
-//  Version:       1.5
 #define ID_CTT_DB_LO 21
-
-//  Description:   Deadband transition higher
-//  Version:       1.5
 #define ID_CTT_DB_HI 22
-
-//  Description:   Hardware initiated trigger based on periodic trigger rule
-//  Version:       1.5
 #define ID_CTT_PERIODIC 23
-
-//  Description:   User commanded sample - button was pushed
-//  Version:       1.5
 #define ID_CTT_MANUAL 24
-
-//  Description:   Channel triggered because of internal cross-trigger rule.  tagCrossTriggerChanIdx is index of channel that triggered.
-//  Version:       1.5
 #define ID_CTT_INT_CROSS_TRIG 25
-
-//  Description:   Channel triggered because of external cross-trigger rule.  tagCrossTriggerChanIdx is index of channel that triggered on external device.  tagCrossTriggerDeviceName is the name of the external device that initiated the cross trigger.
-//  Version:       1.5
 #define ID_CTT_EXT_CROSS_TRIG 26
-
-//  Description:   Channel triggered because of hardware or software module, rule or algorithm
-//  Version:       1.5
 #define ID_CTT_MODULE 27
-
-//  Description:   Rate of change threshold exceeded (dV/dt or dI/dt)
-//  Version:       1.5
 #define ID_CTT_RATE 28
 
-//  ==========================================================
-//  The following IDs are the legal values for
-//  tagSettingPhysicalConnection
-//  ==========================================================
-
-//  Description:   Single phase connection, 1 voltage, 1 current
-//  Version:       1.5
 #define ID_SINGLE_PHASE 1
-
-//  Description:   Delta Connected 2 Element Monitoring
-//  Version:       1.5
 #define ID_2ELEMENT_DELTA 2
-
-//  Description:   Wye 2 Voltages, 3 Currents
-//  Version:       1.5
 #define ID_2_5ELEMENT_WYE 3
-
-//  Description:   3 Voltages, 3 Currents
-//  Version:       1.5
 #define ID_3ELMENT_WYE 4
-
-//  Description:   Delta Connection, 3 voltages, 3 currents
-//  Version:       1.5
 #define ID_3ELEMENT_DELTA 5
-
-//  Description:   Split Single Phase,  2 Volage, 2 Current
-//  Version:       1.5
 #define ID_SPLIT_PHASE 6
-
-//  Description:   2 Phase, 2 Voltages, 2 Currents
-//  Version:       1.5
 #define ID_2ELEMENT_2PHASE 7
 
+typedef enum {
+	NONE = ID_PHASE_NONE,
+	AN =  ID_PHASE_AN ,
+	BN =  ID_PHASE_BN,
+	CN =  ID_PHASE_CN,
+	NG =  ID_PHASE_NG,
+	AB =  ID_PHASE_AB,
+	BC =  ID_PHASE_BC,
+	CA =  ID_PHASE_CA,
+	TOTAL = ID_PHASE_TOTAL,
+}phase_id_t;
+
+typedef enum{
+//	NONE = ID_QM_NONE,
+	VOLTAGE = ID_QM_VOLTAGE,
+	CURRENT = ID_QM_CURRENT,
+	POWER = ID_QM_POWER,
+	ENERGY = ID_QM_ENERGY,
+	TEMPERATURE = ID_QM_TEMPERATURE
+}quantity_measure_id_t;
+
+typedef enum{
+//	NONE = ID_QU_NONE,
+	SECONDS = ID_QU_SECONDS,
+	TIMESTAMP = ID_QU_TIMESTAMP,
+	VOLTS = ID_QU_VOLTS,
+	AMPS = ID_QU_AMPS,
+	VA = ID_QU_VA,
+	WATTS = ID_QU_WATTS,
+	VARS = ID_QU_VARS,
+	HERTZ = ID_QU_HERTZ,
+	PERCENT = ID_QU_PERCENT,
+	VARHOURS = ID_QU_VARHOURS,
+	WATTHOURS = ID_QU_WATTHOURS,
+	VAHOURS = ID_QU_VAHOURS,
+}quantity_units_id_t;
+
+typedef enum{
+	VALUES = ID_SERIES_METHOD_VALUES,
+	SCALED = ID_SERIES_METHOD_SCALED,
+	INCREMENT = ID_SERIES_METHOD_INCREMENT
+}quantity_storage_method_id_t;
+
+#endif

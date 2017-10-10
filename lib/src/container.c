@@ -7,25 +7,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../inc/tags.h"
 #include "../inc/container.h"
 
-static void ContainerTagAdd(Container *c,tag *t)
+static void ContainerTagAdd(Record *c,tag *t)
 {
-	if(c->tags == NULL){
-		c->tags = t;
-	}else{
-		t->next = c->tags;
-		c->tags = t;
+	for (int i = 0; i < c->num_of_child_is_alloc; ++i) {
+		if(c->tags[i] == NULL){
+			c->tags[i] = t;
+			c->num_of_collection ++;
+			return;
+		}
 	}
 
-	c->num_of_tags ++;
+	c->num_of_child_is_alloc ++;
+	c->tags = realloc(c->tags,sizeof(tag*)*c->num_of_child_is_alloc);
+
+	c->tags[c->num_of_child_is_alloc-1] = t;
+	c->num_of_collection ++;
 }
 
 
 
-Container *ContainerCreate(void)
+Record *ContainerCreate(void)
 {
-	Container *c = calloc(1,sizeof(Container));
+	Record *c = calloc(1,sizeof(Record));
 	struct timespec tv;
 
 	clock_gettime(CLOCK_REALTIME,&tv);
@@ -42,20 +48,33 @@ Container *ContainerCreate(void)
 	return NULL;
 }
 
-void ContainerFree(Container *c)
+void ContainerFree(Record *c)
 {
-	tag *root = c->tags;
-	tag *next;
+	tag *root;
 
-	while(root){
-		next = root->next;
-		if(root->element_type == ID_ELEMENT_TYPE_VECTOR){
+	for (int i = 0; i < c->num_of_collection; ++i) {
+		root = c->tags[i];
+		if(root->element.typeElement == ID_ELEMENT_TYPE_VECTOR){
 			vectorFree(root);
-		}else if(root->element_type == ID_ELEMENT_TYPE_SCALAR){
+		}else if(root->element.typeElement == ID_ELEMENT_TYPE_SCALAR){
 			scalarFree(root);
-		}else if(root->element_type == ID_ELEMENT_TYPE_COLLECTION){
+		}else if(root->element.typeElement == ID_ELEMENT_TYPE_COLLECTION){
 			collectionFree(root);
 		}
-		root = next;
 	}
+}
+
+void ContainerSync(int fd,Record *c)
+{
+	struct c_record_mainheader header;
+	struct c_collection body;
+	struct c_collection_element element;
+
+	body.count = c->num_of_collection;
+
+	header.guidRecordSignature = guidRecordSignaturePQDIF;
+	header.tagRecordType = tagContainer;
+	header.sizeHeader = 64;
+	header.sizeData = 0;
+	header.linkNextRecord = header.sizeHeader + header.sizeData;
 }

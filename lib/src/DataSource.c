@@ -9,21 +9,26 @@
 #include "../inc/name_id.h"
 #include "../inc/DataSource.h"
 
-static void DataSourceTagAdd(DataSource *c,tag *t)
+static void DataSourceTagAdd(Record *c,tag *t)
 {
-	if(c->tags == NULL){
-		c->tags = t;
-	}else{
-		t->next = c->tags;
-		c->tags = t;
+	for (int i = 0; i < c->num_of_child_is_alloc; ++i) {
+		if(c->tags[i] == NULL){
+			c->tags[i] = t;
+			c->num_of_collection ++;
+			return;
+		}
 	}
 
-	c->num_of_tags ++;
+	c->num_of_child_is_alloc ++;
+	c->tags = realloc(c->tags,sizeof(tag*)*c->num_of_child_is_alloc);
+
+	c->tags[c->num_of_child_is_alloc-1] = t;
+	c->num_of_collection ++;
 }
 
-DataSource *DataSourceCreate(GUID DsType,int numOfChannelDefs)
+Record *DataSourceCreate(GUID DsType,int numOfChannelDefs)
 {
-	DataSource *ds = calloc(1,sizeof(DataSource));
+	Record *ds = calloc(1,sizeof(Record));
 	struct timespec tv;
 
 	clock_gettime(CLOCK_REALTIME,&tv);
@@ -41,25 +46,24 @@ DataSource *DataSourceCreate(GUID DsType,int numOfChannelDefs)
 }
 
 
-void DataSourceFree(DataSource *ds)
+void DataSourceFree(Record *ds)
 {
-	tag *root = ds->tags;
-	tag *next;
-
-	while(root){
-		next = root->next;
-		if(root->element_type == ID_ELEMENT_TYPE_VECTOR){
+	tag *root;
+	for (int i = 0; i < ds->num_of_collection; ++i) {
+		root = ds->tags[i];
+		if(root->element.typeElement == ID_ELEMENT_TYPE_VECTOR){
 			vectorFree(root);
-		}else if(root->element_type == ID_ELEMENT_TYPE_SCALAR){
+		}else if(root->element.typeElement == ID_ELEMENT_TYPE_SCALAR){
 			scalarFree(root);
-		}else if(root->element_type == ID_ELEMENT_TYPE_COLLECTION){
+		}else if(root->element.typeElement == ID_ELEMENT_TYPE_COLLECTION){
 			collectionFree(root);
 		}
-		root = next;
 	}
+
+//	pq_free(ds->tags);
 }
 
-tag *OneChannelDef(int MeasuredId,int PhaseId,GUID QuanityTypeID,int numOfSeries)
+tag *OneChannelDef(quantity_measure_id_t MeasuredId,phase_id_t PhaseId,GUID QuanityTypeID,int numOfSeries)
 {
 	tag *chdef = createTagCollection(tagOneChannelDefn,4);
 	collectionAdd(chdef,createTagScalar(tagQuantityMeasuredID,ID_PHYS_TYPE_INTEGER4,&MeasuredId));
@@ -94,7 +98,7 @@ void OneSeriesAttached(tag *OneChannel,tag *OneSeries,int index)
 		collectionAdd(SeriesDefns,OneSeries);
 }
 
-void OneChannelAttached(DataSource *ds,tag *OneChannelDef,int index)
+void OneChannelAttached(Record *ds,tag *OneChannelDef,int index)
 {
 	tag *ChannelDefns = NULL;
 
@@ -105,33 +109,44 @@ void OneChannelAttached(DataSource *ds,tag *OneChannelDef,int index)
 	}
 #endif
 
-	ChannelDefns = ds->tags;
-	while(ChannelDefns) {
-		if(PQDIF_IsEqualGUID(ChannelDefns->guid,tagChannelDefns)){
+	for (int i = 0; i < ds->num_of_collection; ++i) {
+		ChannelDefns = ds->tags[i];
+		if(PQDIF_IsEqualGUID(ChannelDefns->element.tagElement,tagChannelDefns)){
 
 			collectionAdd(ChannelDefns,OneChannelDef);
 
 			return ;
 
 		}
-
-		ChannelDefns = ChannelDefns->next;
 	}
+//
+//	ChannelDefns = ds->tags;
+//	while(ChannelDefns) {
+//		if(PQDIF_IsEqualGUID(ChannelDefns->element.tagElement,tagChannelDefns)){
+//
+//			collectionAdd(ChannelDefns,OneChannelDef);
+//
+//			return ;
+//
+//		}
+//
+//		ChannelDefns = ChannelDefns->next;
+//	}
 }
 
 #if 1
 int main(void)
 {
 	// create datasource by ID_DS_TYPE_MEASURE has 4 channeldefs
-	DataSource *ds = DataSourceCreate(ID_DS_TYPE_MEASURE,1);
+	Record *ds = DataSourceCreate(ID_DS_TYPE_MEASURE,1);
 
 	// create oneChannelDefs by ID_QT_WAVEFORM has 1 seriesDefs
-	tag *OneChannel= OneChannelDef(ID_QM_VOLTAGE,ID_PHASE_AN,ID_QT_WAVEFORM,1);
+	tag *OneChannel= OneChannelDef(VOLTAGE,AN,ID_QT_WAVEFORM,1);
 	collectionAdd(OneChannel,createTagString(tagChannelName,"test channle 1"));
 	tag *OneSeries = OneSeriesDef(ID_QU_SECONDS,
 			ID_SERIES_VALUE_TYPE_TIME,
 			ID_QC_INSTANTANEOUS,
-			ID_SERIES_METHOD_SCALED|ID_SERIES_METHOD_INCREMENT);
+			SCALED|INCREMENT);
 
 	// Attached OneSeries to OneChannel->SeriesDefs
 	OneSeriesAttached(OneChannel,OneSeries,0);

@@ -14,13 +14,15 @@
 #include <string.h>
 #include <time.h>
 
-#include "../inc/pqdif_ph.h"
+#include "pqdif_ph.h"
+#include "name_id.h"
 
-#define DEBUG	(0)
+#define DEBUG	(1)
 #define STATIC_COLLECTION_NUM	(0)
 
 #define declareTag(tag)	extern const GUID tag
 
+declareTag(guidRecordSignaturePQDIF);
 declareTag(tagContainer);
 declareTag(tagRecDataSource);
 declareTag(tagRecMonitorSettings);
@@ -172,32 +174,16 @@ extern int allocCount;
 #endif
 
 typedef struct __tags{
-	struct __tags *next;
-#if STATIC_COLLECTION_NUM
-	struct __tags *child[STATIC_COLLECTION_NUM];
-#else
+
 	struct __tags **child;
+	int num_of_collection;
 	int num_of_child_is_alloc;
-#endif
-	GUID guid;
-	int element_type;
-	int phy_type;
-	int data_len;
+	struct c_collection_element element;
+
 #if DEBUG
 	const char *name;
 #endif
-	union{
-		char *string;
-		uint8_t *uint1;
-		uint16_t *uint2;
-		uint32_t *uint4;
-		float *real4;
-		double *real8;
-		TIMESTAMPPQDIF *time;
-		GUID *id;
-		uint8_t data[8];
-		int num_of_collection;
-	};
+	void *data;
 }tag;
 
 tag *createTagString(GUID guid,const char *str);

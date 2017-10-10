@@ -14,8 +14,8 @@
 #include "name_id.h"
 
 typedef struct{
-	Container *Container;
-	DataSource *DataSource;
+	Record *Container;
+	Record *DataSource;
 }pqdif;
 
 #endif /* LIB_INC_PQLIB_H_ */

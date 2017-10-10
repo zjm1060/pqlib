@@ -12,15 +12,11 @@
 //#include "../inc/pqdif_id.h"
 //#include "../inc/pqdif_lg.h"
 
-#include "../inc/tags.h"
+#include "record.h"
 
-typedef struct{
-	tag *tags;
-	int num_of_tags;
 
-}Container;
 
-Container *ContainerCreate(void);
-void ContainerFree(Container *c);
+Record *ContainerCreate(void);
+void ContainerFree(Record *c);
 
 #endif /* LIB_INC_CONTAINER_H_ */
