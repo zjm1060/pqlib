@@ -20,6 +20,17 @@
 #define DEBUG	(1)
 #define STATIC_COLLECTION_NUM	(0)
 
+struct c_scalar
+{
+	UINT1 t[0];
+};
+
+typedef struct c_record_mainheader c_record_mainheader;
+typedef struct c_collection c_collection;
+typedef struct c_collection_element c_collection_element;
+typedef struct c_vector c_vector;
+typedef struct c_scalar c_scalar;
+
 #define declareTag(tag)	extern const GUID tag
 
 declareTag(guidRecordSignaturePQDIF);
