@@ -11,13 +11,20 @@
 #include <zlib.h>
 #include "tags.h"
 
-typedef struct{
-	tag **tags;
-	int num_of_collection;
-	int num_of_child_is_alloc;
-}Record;
+typedef struct MemNode MEMNODE;
+
+struct MemNode {
+	void * obj;
+	size_t siz;
+	long lpos;
+
+	MEMNODE * pPrev;
+	MEMNODE * pNext;
+};
 
 typedef struct stPQAlloc {
+	MEMNODE * pmemFirst;
+	MEMNODE * pmemLast;
 
 	long lMemTotal; 		/*  Total size of objects managed in allocator  */
 	long lCrc32Compressed; 	/*  CRC of the objects (if compression is used)	*/
@@ -28,8 +35,10 @@ typedef struct stPQAlloc {
 							/*  but return correct file offset				*/
 } PQAlloc;
 
+#define PQAlloc_Default	{NULL,NULL,0,0,0,0}
+
 typedef struct{
-	PQAlloc p;	// 集合分配器
+//	PQAlloc p;	// 集合分配器
 	c_collection collection;
 	c_collection_element element[0];
 }collection_t;
@@ -43,5 +52,24 @@ typedef struct{
 	Body_t body;
 }Record_t;
 
+collection_t *CreateCollection(PQAlloc *p,int count,size_t *size,long *idx);
+collection_t *addCollection(PQAlloc *p,collection_t *c,GUID guid,int count);
+UINT1 *addScalarUINT1(PQAlloc *p,collection_t *c,GUID guid,UINT1 value);
+UINT2 *addScalarUINT2(PQAlloc *p,collection_t *c,GUID guid,UINT2 value);
+UINT4 *addScalarUINT4(PQAlloc *p,collection_t *c,GUID guid,UINT4 value);
+REAL4 *addScalarREAL4(PQAlloc *p,collection_t *c,GUID guid,REAL4 value);
+REAL8 *addScalarREAL8(PQAlloc *p,collection_t *c,GUID guid,REAL8 value);
+BOOL1 *addScalarBOOL1(PQAlloc *p,collection_t *c,GUID guid,BOOL1 value);
+BOOL2 *addScalarBOOL2(PQAlloc *p,collection_t *c,GUID guid,BOOL2 value);
+BOOL4 *addScalarBOOL4(PQAlloc *p,collection_t *c,GUID guid,BOOL4 value);
+TIMESTAMPPQDIF *addScalarTimeStamp(PQAlloc *p, collection_t *c, GUID guid, TIMESTAMPPQDIF value);
+GUID *addScalarGUID(PQAlloc *p, collection_t *c, GUID guid, GUID value);
+UINT1 *addVectorUINT1(PQAlloc *p,collection_t *c,GUID guid,int count);
+UINT2 *addVectorUINT2(PQAlloc *p,collection_t *c,GUID guid,int count);
+UINT4 *addVectorUINT4(PQAlloc *p,collection_t *c,GUID guid,int count);
+char *addVectorString(PQAlloc *p, collection_t *c, GUID guid, char *sz);
+long saveRecord(int fd,PQAlloc *p,GUID guid,long idx,int haveNextRecord,int compression);
+
+void DestroyList(PQAlloc *p);
 
 #endif /* LIB_INC_RECORD_H_ */

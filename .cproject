@@ -43,7 +43,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="lib/src/pqlib.c|lib/src/pqalloc.c|lib/src/DataSource.c|lib/src/container.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/src/tags.c|lib/src/pqlib.c|lib/src/pqalloc.c|lib/src/DataSource.c|lib/src/container.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -88,7 +88,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="lib/src/pqlib.c|lib/src/pqalloc.c|lib/src/DataSource.c|lib/src/container.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/src/tags.c|lib/src/pqlib.c|lib/src/pqalloc.c|lib/src/DataSource.c|lib/src/container.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
