@@ -35,7 +35,7 @@ typedef struct stPQAlloc {
 
 	BOOL bShowMessage;
 	long lMemTotal; 		/*  Total size of objects managed in allocator  */
-	long lCrc32Compressed; 	/*  CRC of the objects (if compression is used)	*/
+	UINT4 lCrc32Compressed; 	/*  CRC of the objects (if compression is used)	*/
 	long idxFilePosition; 	/*  next available position in pseudo file		*/
 	long idxOffset; 		/*  Offset to be added to the idx				*/
 							/*  parameter returned by allocate				*/

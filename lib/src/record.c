@@ -593,6 +593,68 @@ UINT4 *addVectorUINT4(PQAlloc *p,collection_t *c,GUID guid,int count)
 
 }
 
+REAL4 *addVectorREAL4(PQAlloc *p,collection_t *c,GUID guid,int count)
+{
+	struct c_vector *pvector;
+	long idx;
+	REAL4 *parray = NULL;
+	size_t size = sizeof(c_vector) + (count * sizeof(REAL4));
+	size = padSizeTo4Bytes( size );
+	c_collection_element *e = element(c,guid);
+
+	if(e){
+		pvector = allocate(p,size,&idx);
+		if(pvector){
+			pvector->count = count;
+			parray = (REAL4 *) ( ( (char *) pvector ) + sizeof( c_vector ) );
+
+			e->tagElement = guid;
+			e->typeElement = ID_ELEMENT_TYPE_VECTOR;
+			e->typePhysical = ID_PHYS_TYPE_REAL4;
+			e->isEmbedded = 0;
+			e->link.sizeElement = size;
+			e->link.linkElement = idx;
+
+			return parray;
+		}
+		return NULL;
+	}
+
+	return NULL;
+
+}
+
+REAL8 *addVectorREAL8(PQAlloc *p,collection_t *c,GUID guid,int count)
+{
+	struct c_vector *pvector;
+	long idx;
+	REAL8 *parray = NULL;
+	size_t size = sizeof(c_vector) + (count * sizeof(REAL8));
+	size = padSizeTo4Bytes( size );
+	c_collection_element *e = element(c,guid);
+
+	if(e){
+		pvector = allocate(p,size,&idx);
+		if(pvector){
+			pvector->count = count;
+			parray = (REAL8 *) ( ( (char *) pvector ) + sizeof( c_vector ) );
+
+			e->tagElement = guid;
+			e->typeElement = ID_ELEMENT_TYPE_VECTOR;
+			e->typePhysical = ID_PHYS_TYPE_REAL8;
+			e->isEmbedded = 0;
+			e->link.sizeElement = size;
+			e->link.linkElement = idx;
+
+			return parray;
+		}
+		return NULL;
+	}
+
+	return NULL;
+
+}
+
 char *addVectorString(PQAlloc *p, collection_t *c, GUID guid, char *sz)
 {
 	struct c_vector * pvector = NULL;
@@ -627,7 +689,35 @@ char *addVectorString(PQAlloc *p, collection_t *c, GUID guid, char *sz)
 	return NULL;
 }
 
+void UpdateCRC(PQAlloc *p, int compression)
+{
+	MEMNODE * pNode;
 
+	//  Init CRC
+	if (compression == ID_COMP_ALG_NONE) {
+		p->lCrc32Compressed = 0;
+		return ;
+	} else if (compression == ID_COMP_ALG_ZLIB) {
+		p->lCrc32Compressed = adler32(0L, Z_NULL, 0);
+	}
+
+	pNode = p->pmemFirst;
+	while (pNode) {
+		if (compression == ID_COMP_ALG_NONE) {
+			//  Nothing!
+			break;
+		} else if (compression == ID_COMP_ALG_ZLIB) {
+			//  Update the CRC for this block
+			p->lCrc32Compressed = adler32(p->lCrc32Compressed, (Bytef *) pNode->obj,
+					pNode->siz);
+		} else {
+			//  Not supported!
+			break;
+		}
+
+		pNode = pNode->pNext;
+	}
+}
 
 long writeList(int fd,PQAlloc *p,int compression)
 {
@@ -637,6 +727,7 @@ long writeList(int fd,PQAlloc *p,int compression)
     int err;
     MEMNODE *pNode;
     long sizeFinal = 0;
+    long crc = 0;
 
 	if(compression == ID_COMP_ALG_ZLIB){
         //  Init ZLIB for best compression ratio
@@ -652,6 +743,8 @@ long writeList(int fd,PQAlloc *p,int compression)
         bufferOut = pq_alloc(sizeOut);
         c_stream.avail_out = sizeOut;
         c_stream.next_out = bufferOut;
+
+        crc = adler32(0L, Z_NULL, 0);
 	}
 
 	pNode = p->pmemFirst;
@@ -670,6 +763,7 @@ long writeList(int fd,PQAlloc *p,int compression)
 				err = deflate( &c_stream, Z_NO_FLUSH );
 				if( c_stream.total_out > (sizeOut/2) ){
 					sizeFinal += c_stream.total_out;
+					crc = adler32(crc, bufferOut,c_stream.total_out);
 					write(fd,bufferOut,c_stream.total_out);
 					c_stream.avail_out = sizeOut;
 					c_stream.next_out = bufferOut;
@@ -685,6 +779,7 @@ long writeList(int fd,PQAlloc *p,int compression)
 			err = deflate( &c_stream, Z_FINISH );
 			if( c_stream.total_out > 0 ){
 				sizeFinal += c_stream.total_out;
+				crc = adler32(crc, bufferOut,c_stream.total_out);
 				write(fd,bufferOut,c_stream.total_out);
 				c_stream.avail_out = sizeOut;
 				c_stream.next_out  = bufferOut;
@@ -696,6 +791,7 @@ long writeList(int fd,PQAlloc *p,int compression)
 		}while(err == Z_OK);
 
 		p->lMemTotal = sizeFinal;
+		p->lCrc32Compressed = crc;
 
 		pq_free(bufferOut);
 
@@ -723,6 +819,9 @@ long saveRecord(int fd,PQAlloc *p,GUID guid,long idx,int haveNextRecord,int comp
 		header.linkNextRecord = p->lMemTotal + 64 + idxFilePosition;
 	else
 		header.linkNextRecord = 0;
+
+//	UpdateCRC(p,compression);
+	header.checksum = p->lCrc32Compressed;
 
 	lseek(fd,idxFilePosition,SEEK_SET);
 	write(fd,&header,sizeof(header));

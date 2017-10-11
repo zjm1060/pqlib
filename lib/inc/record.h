@@ -67,6 +67,8 @@ GUID *addScalarGUID(PQAlloc *p, collection_t *c, GUID guid, GUID value);
 UINT1 *addVectorUINT1(PQAlloc *p,collection_t *c,GUID guid,int count);
 UINT2 *addVectorUINT2(PQAlloc *p,collection_t *c,GUID guid,int count);
 UINT4 *addVectorUINT4(PQAlloc *p,collection_t *c,GUID guid,int count);
+REAL4 *addVectorREAL4(PQAlloc *p,collection_t *c,GUID guid,int count);
+REAL8 *addVectorREAL8(PQAlloc *p,collection_t *c,GUID guid,int count);
 char *addVectorString(PQAlloc *p, collection_t *c, GUID guid, char *sz);
 long saveRecord(int fd,PQAlloc *p,GUID guid,long idx,int haveNextRecord,int compression);
 
